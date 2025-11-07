@@ -1,0 +1,168 @@
+.patinhas-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #fff;
+    justify-content: center;
+}
+
+.game-area, .stats-area {
+    background: linear-gradient(145deg, #1a1a1a, #000);
+    border: 3px solid #00ff00; /* Verde dinheiro */
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
+    border-radius: 20px;
+    padding: 25px;
+    flex: 1 1 400px;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Avatar Animado */
+.patinhas-avatar {
+    font-size: 80px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px gold);
+    transition: all 0.3s ease;
+}
+.mood-happy { animation: bounce 0.6s infinite alternate; }
+.mood-shocked { animation: shake 0.5s; filter: drop-shadow(0 0 15px red); }
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px) scale(1.1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+/* Grid 3x3 */
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    background-color: #222;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: inset 0 0 20px #000;
+    margin-bottom: 25px;
+}
+
+.grid-cell {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(145deg, #fff, #e6e6e6);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 45px;
+    border: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.grid-cell.spinning {
+    filter: blur(2px);
+    transform: scale(0.9);
+}
+
+.grid-cell.winner {
+    border-color: gold;
+    background: #fffacd;
+    animation: pulseWinner 0.8s infinite;
+    z-index: 1;
+}
+@keyframes pulseWinner { 0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); } }
+
+/* HUD e Controles */
+.win-message {
+    min-height: 30px;
+    color: gold;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px #000;
+}
+
+.balance-box {
+    font-size: 1.5rem;
+    background-color: #000;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.bet-control {
+    display: flex;
+    flex-direction: column;
+    color: #ccc;
+}
+.bet-control select {
+    padding: 10px;
+    border-radius: 8px;
+    background: #333;
+    color: #fff;
+    border: 1px solid gold;
+    font-size: 1rem;
+}
+
+.spin-btn {
+    flex: 2;
+    background: linear-gradient(to bottom, gold, darkgoldenrod);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2a0a0a;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #8B4513;
+    transition: all 0.1s;
+}
+.spin-btn:active:not(:disabled) {
+    transform: translateY(5px);
+    box-shadow: none;
+}
+.spin-btn:disabled {
+    filter: grayscale(0.8);
+    cursor: not-allowed;
+}
+
+.sim-btn {
+    background: #333;
+    color: #aaa;
+    border: 1px solid #555;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.sim-btn:hover { background: #444; color: #fff; }
+
+/* Gráficos e Tabelas */
+.chart-box {
+    width: 100%;
+    height: 200px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.paytable {
+    width: 100%;
+    font-size: 0.9rem;
+    color: #ccc;
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 10px;
+}
+.paytable ul { list-style: none; padding: 0; margin: 10px 0 0 0; }
+.paytable li { margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 5px; }
