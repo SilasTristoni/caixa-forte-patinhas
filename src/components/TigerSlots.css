@@ -1,0 +1,160 @@
+.tiger-slots-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    color: #fff;
+}
+
+.game-section, .stats-section {
+    background: linear-gradient(145deg, #2a0a0a, #000);
+    border: 4px solid #FFD700;
+    border-radius: 15px;
+    padding: 20px;
+    flex: 1 1 300px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+/* Avatar do Tigre */
+.tiger-avatar {
+    font-size: 80px;
+    text-align: center;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px #FFD700);
+    animation: floatTiger 3s ease-in-out infinite;
+}
+.mood-happy { animation: pulseTiger 0.8s infinite; } /* Tigre pulando de alegria quando ganha da gente */
+.mood-angry { filter: grayscale(0.5) drop-shadow(0 0 10px red); }
+
+@keyframes floatTiger { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes pulseTiger { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+/* Rolos (Reels) */
+.reels-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    background-color: #4a0000;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 15px #000;
+}
+
+.reel {
+    width: 80px;
+    height: 100px;
+    background-color: #fffaf0;
+    border-radius: 8px;
+    border: 3px solid #FFD700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    overflow: hidden;
+    color: #000;
+}
+
+.reel.spinning {
+    animation: slotSpin 0.1s infinite linear;
+    filter: blur(1px);
+}
+
+@keyframes slotSpin {
+    0% { transform: translateY(-2px); }
+    50% { transform: translateY(2px); }
+    100% { transform: translateY(-2px); }
+}
+
+/* Controles e Infos */
+.info-panel h3 {
+    color: #FFD700;
+    text-align: center;
+    min-height: 30px;
+    text-shadow: 0px 0px 5px #000;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.bet-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    color: #FFD700;
+}
+
+.bet-selector select {
+    padding: 5px 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #fff;
+    border: 2px solid #FFD700;
+}
+
+.spin-button-main {
+    background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
+    border: none;
+    padding: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4a0000;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 5px 0 #b8860b;
+}
+.spin-button-main:active {
+    transform: translateY(5px);
+    box-shadow: none;
+}
+.spin-button-main:disabled {
+    filter: grayscale(80%);
+    cursor: not-allowed;
+}
+
+.sim-button {
+    background-color: #333;
+    color: #ccc;
+    border: 1px solid #555;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Estatísticas */
+.balance-display-tiger {
+    font-size: 1.8rem;
+    text-align: center;
+    color: #fff;
+    background-color: #000;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+}
+.zero-balance { color: red; animation: pulseTiger 1s infinite; }
+
+.chart-container-tiger {
+    height: 250px;
+    background-color: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.paytable {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+.paytable ul { list-style: none; padding: 0; }
+.paytable li { margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 2px; }
