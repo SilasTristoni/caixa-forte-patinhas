@@ -5,25 +5,21 @@ import {
 } from 'chart.js';
 import './PatinhasSlots.css';
 
+// IMPORTANDO AS IMAGENS
+import bannerPromo from '../assets/patinhos1.png';
+import avatarPatinhas from '../assets/patinhos4.png';
+
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 // --- CONFIGURAÇÃO DO JOGO ---
-
-// Símbolos com pesos ajustados para criar muitas "quase vitórias" e pequenos ganhos.
 const SYMBOLS = [
-    { id: 1, icon: '🪙', value: 0.5, weight: 45 }, // Moeda: Paga METADE da aposta (perda disfarçada de vitória)
-    { id: 2, icon: '💵', value: 1, weight: 30 },   // Dinheiro: Paga a aposta de volta (neutro)
-    { id: 3, icon: '💰', value: 3, weight: 15 },   // Saco: Pequeno lucro
-    { id: 4, icon: '💎', value: 10, weight: 8 },   // Diamante: Bom lucro
-    { id: 5, icon: '🦆', value: 50, weight: 2 }    // Patinhas: Jackpot (muito raro)
+    { id: 1, icon: '🪙', value: 0.5, weight: 45 },
+    { id: 2, icon: '💵', value: 1, weight: 30 },
+    { id: 3, icon: '💰', value: 3, weight: 15 },
+    { id: 4, icon: '💎', value: 10, weight: 8 },
+    { id: 5, icon: '🦆', value: 50, weight: 2 }
 ];
 
-// 5 Linhas de pagamento padrão para grid 3x3
-// [0, 1, 2] (Linha de cima)
-// [3, 4, 5] (Linha do meio)
-// [6, 7, 8] (Linha de baixo)
-// [0, 4, 8] (Diagonal \ )
-// [2, 4, 6] (Diagonal / )
 const PAYLINES = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], 
     [0, 4, 8], [2, 4, 6]
@@ -46,11 +42,10 @@ const PatinhasSlots = () => {
     const [grid, setGrid] = useState(Array(9).fill(SYMBOLS[0]));
     const [isSpinning, setIsSpinning] = useState(false);
     const [winMessage, setWinMessage] = useState('Multiplique sua fortuna!');
-    const [patinhasMood, setPatinhasMood] = useState('neutral'); // neutral, happy, angry, shocked
+    const [patinhasMood, setPatinhasMood] = useState('neutral');
     const [balanceHistory, setBalanceHistory] = useState([STARTING_BALANCE]);
-    const [winningCells, setWinningCells] = useState([]); // Para destacar as células que ganharam
+    const [winningCells, setWinningCells] = useState([]);
 
-    // Efeito sonoro visual (troca de humor na falência)
     useEffect(() => {
         if (balance <= 0) setPatinhasMood('shocked');
     }, [balance]);
@@ -62,15 +57,14 @@ const PatinhasSlots = () => {
         setWinMessage('Girando...');
         setPatinhasMood('neutral');
         setWinningCells([]);
-        setBalance(prev => prev - betAmount); // A casa cobra adiantado!
+        setBalance(prev => prev - betAmount);
 
-        // Animação do giro (suspense artificial)
         let spins = 0;
-        const speed = 80; // ms entre trocas
+        const speed = 80;
         const interval = setInterval(() => {
             setGrid(Array.from({ length: 9 }, () => getRandomSymbol()));
             spins++;
-            if (spins > 12) { // Duração da animação
+            if (spins > 12) {
                 clearInterval(interval);
                 finalizeSpin();
             }
@@ -85,24 +79,20 @@ const PatinhasSlots = () => {
         let newWinningCells = [];
         let nearMiss = false;
 
-        // Verifica todas as linhas de pagamento
         PAYLINES.forEach(line => {
             const s1 = finalGrid[line[0]];
             const s2 = finalGrid[line[1]];
             const s3 = finalGrid[line[2]];
 
-            // Vitória: 3 símbolos iguais na linha
             if (s1.id === s2.id && s2.id === s3.id) {
                 roundWin += betAmount * s1.value;
                 newWinningCells.push(...line);
             } 
-            // Quase vitória (2 iguais): Gatilho psicológico importante
             else if (s1.id === s2.id || s2.id === s3.id || s1.id === s3.id) {
                 nearMiss = true;
             }
         });
 
-        // Atualiza estado
         if (roundWin > 0) {
             setBalance(prev => {
                 const newBal = prev + roundWin;
@@ -111,9 +101,7 @@ const PatinhasSlots = () => {
             });
             setWinningCells([...new Set(newWinningCells)]);
 
-            // Lógica de Feedback Viciante
             if (roundWin < betAmount) {
-                // PERDA DISFARÇADA DE VITÓRIA (A mais perigosa!)
                 setWinMessage(`Bateu na trave! Recuperou R$ ${roundWin.toFixed(2)}`);
                 setPatinhasMood('neutral'); 
             } else if (roundWin > betAmount * 10) {
@@ -127,7 +115,7 @@ const PatinhasSlots = () => {
             setBalanceHistory(h => [...h, balance - betAmount]);
             if (nearMiss) {
                 setWinMessage('UUH! Foi quase! Tente de novo!');
-                setPatinhasMood('shocked'); // "Shocked" para incentivar tentar de novo
+                setPatinhasMood('shocked');
             } else {
                 setWinMessage('A casa venceu essa. Tente recuperar!');
                 setPatinhasMood('angry');
@@ -136,12 +124,11 @@ const PatinhasSlots = () => {
         setIsSpinning(false);
     };
 
-    // Simulação Rápida (mostra a tendência de queda a longo prazo)
     const runSimulation = () => {
         if (isSpinning) return;
         let simBal = balance;
         let simHist = [...balanceHistory];
-        for(let i=0; i<100; i++) { // 100 rodadas instantâneas
+        for(let i=0; i<100; i++) {
             if(simBal < betAmount) break;
             simBal -= betAmount;
             const g = Array.from({ length: 9 }, () => getRandomSymbol());
@@ -173,15 +160,18 @@ const PatinhasSlots = () => {
     return (
         <div className="patinhas-container">
             <div className="game-area">
-                {/* Avatar Reativo */}
+                {/* NOVO BANNER PROMOCIONAL */}
+                <img src={bannerPromo} alt="Promoção Comece Agora" className="promo-banner" />
+
+                {/* AVATAR COM IMAGEM + EMOJI DE HUMOR SOBREPOSTO */}
                 <div className={`patinhas-avatar mood-${patinhasMood}`}>
-                    {patinhasMood === 'neutral' && '🦆'}
-                    {patinhasMood === 'happy' && '🤑'}
-                    {patinhasMood === 'angry' && '😤'}
-                    {patinhasMood === 'shocked' && '😱'}
+                    <img src={avatarPatinhas} alt="Avatar Patinhas" className="avatar-img" />
+                    <div className="mood-overlay">
+                        {patinhasMood === 'angry' && '😤'}
+                        {patinhasMood === 'shocked' && '😱'}
+                    </div>
                 </div>
 
-                {/* Grid 3x3 */}
                 <div className="slots-grid">
                     {grid.map((symbol, i) => (
                         <div key={i} className={`grid-cell ${winningCells.includes(i) ? 'winner' : ''} ${isSpinning ? 'spinning' : ''}`}>
@@ -190,7 +180,6 @@ const PatinhasSlots = () => {
                     ))}
                 </div>
 
-                {/* HUD */}
                 <div className="hud">
                     <div className="win-message">{winMessage}</div>
                     <div className="balance-box">
@@ -216,7 +205,6 @@ const PatinhasSlots = () => {
                 </div>
             </div>
 
-            {/* Estatísticas */}
             <div className="stats-area">
                 <h3>Sua Jornada Financeira</h3>
                 <div className="chart-box">
