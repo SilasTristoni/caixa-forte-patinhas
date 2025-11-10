@@ -5,13 +5,10 @@ import {
 } from 'chart.js';
 import './PatinhasSlots.css';
 
-// IMPORTANDO AS IMAGENS
-import bannerPromo from '../assets/patinhos1.png';
-import avatarPatinhas from '../assets/patinhos4.png';
-
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 // --- CONFIGURAÇÃO DO JOGO ---
+
 const SYMBOLS = [
     { id: 1, icon: '🪙', value: 0.5, weight: 45 },
     { id: 2, icon: '💵', value: 1, weight: 30 },
@@ -40,41 +37,83 @@ const PatinhasSlots = () => {
     const [balance, setBalance] = useState(STARTING_BALANCE);
     const [betAmount, setBetAmount] = useState(10);
     const [grid, setGrid] = useState(Array(9).fill(SYMBOLS[0]));
-    const [isSpinning, setIsSpinning] = useState(false);
+    // Estado para controlar quais colunas estão a girar individualmente [col0, col1, col2]
+    const [spinningCols, setSpinningCols] = useState([false, false, false]);
     const [winMessage, setWinMessage] = useState('Multiplique sua fortuna!');
     const [patinhasMood, setPatinhasMood] = useState('neutral');
     const [balanceHistory, setBalanceHistory] = useState([STARTING_BALANCE]);
     const [winningCells, setWinningCells] = useState([]);
 
+    // Verifica se alguma coluna ainda está a girar
+    const isAnySpinning = spinningCols.some(Boolean);
+
+    // Efeito sonoro visual (troca de humor na falência)
     useEffect(() => {
         if (balance <= 0) setPatinhasMood('shocked');
     }, [balance]);
 
-    const spin = useCallback(() => {
-        if (balance < betAmount || isSpinning) return;
+    // Efeito visual de giro contínuo para as colunas ativas
+    useEffect(() => {
+        if (!isAnySpinning) return;
 
-        setIsSpinning(true);
-        setWinMessage('Girando...');
+        // Aumentei a velocidade de atualização visual para 30ms para parecer mais rápido
+        const interval = setInterval(() => {
+            setGrid(currentGrid => currentGrid.map((symbol, i) => {
+                if (spinningCols[i % 3]) return getRandomSymbol();
+                return symbol;
+            }));
+        }, 30);
+
+        return () => clearInterval(interval);
+    }, [isAnySpinning, spinningCols]);
+
+    const spin = useCallback(() => {
+        if (balance < betAmount || isAnySpinning) return;
+
+        // 1. Iniciar o giro
+        setBalance(prev => prev - betAmount);
+        setWinMessage('GIRANDO...');
         setPatinhasMood('neutral');
         setWinningCells([]);
-        setBalance(prev => prev - betAmount);
+        setSpinningCols([true, true, true]);
 
-        let spins = 0;
-        const speed = 80;
-        const interval = setInterval(() => {
-            setGrid(Array.from({ length: 9 }, () => getRandomSymbol()));
-            spins++;
-            if (spins > 12) {
-                clearInterval(interval);
-                finalizeSpin();
-            }
-        }, speed);
-    }, [balance, betAmount, isSpinning]);
-
-    const finalizeSpin = () => {
+        // 2. Pré-determinar o resultado
         const finalGrid = Array.from({ length: 9 }, () => getRandomSymbol());
-        setGrid(finalGrid);
 
+        // 3. Agendar paragens escalonadas (Vezes mais rápidas agora)
+        const STOP_DELAY = 500; // 0.5s até a primeira parar (era 1000)
+        const STAGGER = 300;    // 0.3s entre cada coluna (era 600)
+
+        // Parar Coluna 1
+        setTimeout(() => {
+            setSpinningCols([false, true, true]);
+            setGrid(current => {
+                const newGrid = [...current];
+                [0, 3, 6].forEach(i => newGrid[i] = finalGrid[i]);
+                return newGrid;
+            });
+        }, STOP_DELAY);
+
+        // Parar Coluna 2
+        setTimeout(() => {
+            setSpinningCols([false, false, true]);
+            setGrid(current => {
+                const newGrid = [...current];
+                [1, 4, 7].forEach(i => newGrid[i] = finalGrid[i]);
+                return newGrid;
+            });
+        }, STOP_DELAY + STAGGER);
+
+        // Parar Coluna 3 e finalizar
+        setTimeout(() => {
+            setSpinningCols([false, false, false]);
+            setGrid(finalGrid);
+            finalizeRound(finalGrid);
+        }, STOP_DELAY + STAGGER * 2);
+
+    }, [balance, betAmount, isAnySpinning]);
+
+    const finalizeRound = (finalGrid) => {
         let roundWin = 0;
         let newWinningCells = [];
         let nearMiss = false;
@@ -112,20 +151,19 @@ const PatinhasSlots = () => {
                  setPatinhasMood('happy');
             }
         } else {
-            setBalanceHistory(h => [...h, balance - betAmount]);
+            setBalanceHistory(h => [...h, balance]);
             if (nearMiss) {
-                setWinMessage('UUH! Foi quase! Tente de novo!');
+                setWinMessage('UUH! Foi quase!');
                 setPatinhasMood('shocked');
             } else {
-                setWinMessage('A casa venceu essa. Tente recuperar!');
+                setWinMessage('A casa venceu essa.');
                 setPatinhasMood('angry');
             }
         }
-        setIsSpinning(false);
     };
 
     const runSimulation = () => {
-        if (isSpinning) return;
+        if (isAnySpinning) return;
         let simBal = balance;
         let simHist = [...balanceHistory];
         for(let i=0; i<100; i++) {
@@ -141,7 +179,7 @@ const PatinhasSlots = () => {
         }
         setBalance(simBal);
         setBalanceHistory(simHist);
-        setWinMessage('Simulação de 100 jogadas finalizada.');
+        setWinMessage('Simulação rápida finalizada.');
     };
 
     const chartData = {
@@ -160,24 +198,22 @@ const PatinhasSlots = () => {
     return (
         <div className="patinhas-container">
             <div className="game-area">
-                {/* NOVO BANNER PROMOCIONAL */}
-                <img src={bannerPromo} alt="Promoção Comece Agora" className="promo-banner" />
-
-                {/* AVATAR COM IMAGEM + EMOJI DE HUMOR SOBREPOSTO */}
                 <div className={`patinhas-avatar mood-${patinhasMood}`}>
-                    <img src={avatarPatinhas} alt="Avatar Patinhas" className="avatar-img" />
-                    <div className="mood-overlay">
-                        {patinhasMood === 'angry' && '😤'}
-                        {patinhasMood === 'shocked' && '😱'}
-                    </div>
+                    {patinhasMood === 'neutral' && '🦆'}
+                    {patinhasMood === 'happy' && '🤑'}
+                    {patinhasMood === 'angry' && '😤'}
+                    {patinhasMood === 'shocked' && '😱'}
                 </div>
 
                 <div className="slots-grid">
-                    {grid.map((symbol, i) => (
-                        <div key={i} className={`grid-cell ${winningCells.includes(i) ? 'winner' : ''} ${isSpinning ? 'spinning' : ''}`}>
-                            {symbol.icon}
-                        </div>
-                    ))}
+                    {grid.map((symbol, i) => {
+                        const isColSpinning = spinningCols[i % 3];
+                        return (
+                            <div key={i} className={`grid-cell ${winningCells.includes(i) ? 'winner' : ''} ${isColSpinning ? 'spinning' : 'stopped'}`}>
+                                {symbol.icon}
+                            </div>
+                        );
+                    })}
                 </div>
 
                 <div className="hud">
@@ -189,18 +225,18 @@ const PatinhasSlots = () => {
                     <div className="controls">
                         <div className="bet-control">
                             <span>Aposta:</span>
-                            <select value={betAmount} onChange={(e) => setBetAmount(Number(e.target.value))} disabled={isSpinning}>
+                            <select value={betAmount} onChange={(e) => setBetAmount(Number(e.target.value))} disabled={isAnySpinning}>
                                 <option value={10}>R$ 10</option>
                                 <option value={50}>R$ 50</option>
                                 <option value={100}>R$ 100</option>
                             </select>
                         </div>
-                        <button className="spin-btn" onClick={spin} disabled={isSpinning || balance < betAmount}>
-                            GIRAR!
+                        <button className="spin-btn" onClick={spin} disabled={isAnySpinning || balance < betAmount}>
+                            {isAnySpinning ? '...' : 'GIRAR!'}
                         </button>
                     </div>
-                    <button className="sim-btn" onClick={runSimulation} disabled={isSpinning}>
-                        ⏩ Avançar 100 Rodadas (Ver o Futuro)
+                    <button className="sim-btn" onClick={runSimulation} disabled={isAnySpinning}>
+                        ⏩ Avançar 100 Rodadas
                     </button>
                 </div>
             </div>
@@ -211,11 +247,10 @@ const PatinhasSlots = () => {
                     <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false} }, scales: { x: {display:false}, y: {grid: {color: '#333'}} } }} />
                 </div>
                 <div className="paytable">
-                    <h4>Pagamentos (Simulação)</h4>
-                    <small>Note como os prêmios comuns pagam MENOS que a aposta.</small>
+                    <h4>Pagamentos</h4>
                     <ul>
                         {SYMBOLS.map(s => (
-                            <li key={s.id}>{s.icon} x3 = {s.value}x aposta ({s.weight}% chance base)</li>
+                            <li key={s.id}>{s.icon} x3 = {s.value}x aposta</li>
                         ))}
                     </ul>
                 </div>

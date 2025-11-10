@@ -22,52 +22,22 @@
     align-items: center;
 }
 
-/* --- Banner --- */
-.promo-banner {
-    width: 100%;
-    max-height: 150px; /* Limita altura para não empurrar muito o jogo */
-    object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
-    border-radius: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    border: 2px solid #333;
-}
-
 /* --- Avatar --- */
 .patinhas-avatar {
-    position: relative;
+    font-size: 80px;
     margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px gold);
     transition: all 0.3s ease;
 }
+.mood-happy { animation: bounce 0.6s infinite alternate; }
+.mood-shocked { animation: shake 0.5s; filter: drop-shadow(0 0 15px red); }
 
-.avatar-img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 4px solid gold;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-    object-fit: cover;
-    background-color: #000; /* Fundo para png transparente */
-}
-
-.mood-overlay {
-    position: absolute;
-    bottom: -5px;
-    right: -5px;
-    font-size: 40px;
-    filter: drop-shadow(0 0 5px black);
-}
-
-.mood-happy .avatar-img { animation: bounce 0.6s infinite alternate; border-color: #00ff00; }
-.mood-shocked .avatar-img { animation: shake 0.5s; border-color: red; }
-.mood-angry .avatar-img { filter: grayscale(1) sepia(0.5) hue-rotate(320deg); }
-
-@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px) scale(1.05); } }
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px) scale(1.1); } }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
 
-/* --- Grid 3x3 (Corrigido) --- */
+/* --- Grid 3x3 --- */
 .slots-grid {
-    display: grid; /* AQUI ESTAVA O ERRO PRINCIPAL */
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     background-color: #222;
@@ -85,16 +55,46 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px; /* Levemente menor para garantir que o emoji caiba */
+    font-size: 45px;
     border: 3px solid transparent;
     transition: all 0.2s;
     cursor: default;
     user-select: none;
+    overflow: hidden;
+    position: relative;
 }
 
+/* Motion Blur Vertical */
 .grid-cell.spinning {
-    filter: blur(2px);
-    transform: scale(0.9);
+    color: transparent;
+    text-shadow: none;
+}
+.grid-cell.spinning::after {
+    content: '🪙\A💵\A💰\A💎\A🦆';
+    white-space: pre;
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    animation: verticalSpin 0.2s linear infinite; /* Giro bem rápido */
+    filter: blur(4px);
+    opacity: 0.8;
+    font-size: 45px;
+    line-height: 80px;
+}
+@keyframes verticalSpin {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+}
+
+/* Paragem com impacto */
+.grid-cell.stopped {
+    animation: reelStop 0.2s ease-out; /* Mais rápido também */
+}
+@keyframes reelStop {
+    0% { transform: translateY(-30px); }
+    60% { transform: translateY(10px); }
+    100% { transform: translateY(0); }
 }
 
 .grid-cell.winner {
@@ -195,7 +195,7 @@
 /* --- Stats Area --- */
 .chart-box {
     width: 100%;
-    height: 250px; /* Um pouco mais alto para ver melhor */
+    height: 250px;
     background: rgba(255,255,255,0.02);
     border-radius: 10px;
     padding: 15px;
