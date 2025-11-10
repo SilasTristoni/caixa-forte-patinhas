@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { playSound } from '../utils/useSound';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend,
@@ -44,6 +45,12 @@ const PatinhasSlots = () => {
     const [balanceHistory, setBalanceHistory] = useState([STARTING_BALANCE]);
     const [winningCells, setWinningCells] = useState([]);
 
+    useEffect(() => {
+        // Pré-carrega os sons para uma melhor experiência
+        // A função preloadSounds não foi exportada, mas a lógica está no useSound.js
+        // A simples chamada a playSound já fará o Howler carregar o som na primeira vez.
+    }, []);
+
     // Verifica se alguma coluna ainda está a girar
     const isAnySpinning = spinningCols.some(Boolean);
 
@@ -76,6 +83,7 @@ const PatinhasSlots = () => {
         setPatinhasMood('neutral');
         setWinningCells([]);
         setSpinningCols([true, true, true]);
+        playSound('spinStart');
 
         // 2. Pré-determinar o resultado
         const finalGrid = Array.from({ length: 9 }, () => getRandomSymbol());
@@ -92,6 +100,7 @@ const PatinhasSlots = () => {
                 [0, 3, 6].forEach(i => newGrid[i] = finalGrid[i]);
                 return newGrid;
             });
+            playSound('reelStop');
         }, STOP_DELAY);
 
         // Parar Coluna 2
@@ -102,12 +111,14 @@ const PatinhasSlots = () => {
                 [1, 4, 7].forEach(i => newGrid[i] = finalGrid[i]);
                 return newGrid;
             });
+            playSound('reelStop');
         }, STOP_DELAY + STAGGER);
 
         // Parar Coluna 3 e finalizar
         setTimeout(() => {
             setSpinningCols([false, false, false]);
             setGrid(finalGrid);
+            playSound('reelStop');
             finalizeRound(finalGrid);
         }, STOP_DELAY + STAGGER * 2);
 
@@ -146,18 +157,22 @@ const PatinhasSlots = () => {
             } else if (roundWin > betAmount * 10) {
                  setWinMessage(`💰 SUPER BIG WIN! R$ ${roundWin.toFixed(2)} 💰`);
                  setPatinhasMood('happy');
+                 playSound('bigWin');
             } else {
                  setWinMessage(`VITÓRIA! Ganhou R$ ${roundWin.toFixed(2)}!`);
                  setPatinhasMood('happy');
+                 playSound('smallWin');
             }
         } else {
             setBalanceHistory(h => [...h, balance]);
             if (nearMiss) {
                 setWinMessage('UUH! Foi quase!');
                 setPatinhasMood('shocked');
+                playSound('nearMiss');
             } else {
                 setWinMessage('A casa venceu essa.');
                 setPatinhasMood('angry');
+                playSound('loss');
             }
         }
     };
