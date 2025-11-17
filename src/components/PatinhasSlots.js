@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend,
 } from 'chart.js';
+import { FaCoins, FaDollarSign, FaGem, FaFeather } from 'react-icons/fa';
 import './PatinhasSlots.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -11,11 +12,11 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 // --- CONFIGURAÇÃO DO JOGO ---
 
 const SYMBOLS = [
-    { id: 1, icon: '🪙', value: 0.5, weight: 45 },
-    { id: 2, icon: '💵', value: 1, weight: 30 },
-    { id: 3, icon: '💰', value: 3, weight: 15 },
-    { id: 4, icon: '💎', value: 10, weight: 8 },
-    { id: 5, icon: '🦆', value: 50, weight: 2 }
+    { id: 1, icon: FaCoins, label: 'Moeda', value: 0.5, weight: 45 },
+    { id: 2, icon: FaDollarSign, label: 'Dólar', value: 1, weight: 30 },
+    { id: 3, icon: FaDollarSign, label: 'Dinheiro', value: 3, weight: 15 },
+    { id: 4, icon: FaGem, label: 'Joia', value: 10, weight: 8 },
+    { id: 5, icon: FaFeather, label: 'Pato', value: 50, weight: 2 }
 ];
 
 const PAYLINES = [
@@ -212,6 +213,7 @@ const PatinhasSlots = () => {
 
     return (
         <div className="patinhas-container">
+            <div className="banner banner-left"></div>
             <div className="game-area">
                 <div className={`patinhas-avatar mood-${patinhasMood}`}>
                     {patinhasMood === 'neutral' && '🦆'}
@@ -223,9 +225,10 @@ const PatinhasSlots = () => {
                 <div className="slots-grid">
                     {grid.map((symbol, i) => {
                         const isColSpinning = spinningCols[i % 3];
+                        const IconComponent = symbol.icon;
                         return (
                             <div key={i} className={`grid-cell ${winningCells.includes(i) ? 'winner' : ''} ${isColSpinning ? 'spinning' : 'stopped'}`}>
-                                {symbol.icon}
+                                <IconComponent className="symbol-icon" />
                             </div>
                         );
                     })}
@@ -264,12 +267,16 @@ const PatinhasSlots = () => {
                 <div className="paytable">
                     <h4>Pagamentos</h4>
                     <ul>
-                        {SYMBOLS.map(s => (
-                            <li key={s.id}>{s.icon} x3 = {s.value}x aposta</li>
-                        ))}
+                        {SYMBOLS.map(s => {
+                            const IconComponent = s.icon;
+                            return (
+                                <li key={s.id}><IconComponent className="paytable-icon" /> x3 = {s.value}x aposta</li>
+                            );
+                        })}
                     </ul>
                 </div>
             </div>
+            <div className="banner banner-right"></div>
         </div>
     );
 };
