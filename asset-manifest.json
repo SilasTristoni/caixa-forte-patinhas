@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/caixa-forte-patinhas/static/css/main.6ddbe6f4.css",
+    "main.js": "/caixa-forte-patinhas/static/js/main.ea974e68.js",
+    "static/js/453.a17a4610.chunk.js": "/caixa-forte-patinhas/static/js/453.a17a4610.chunk.js",
+    "index.html": "/caixa-forte-patinhas/index.html",
+    "main.6ddbe6f4.css.map": "/caixa-forte-patinhas/static/css/main.6ddbe6f4.css.map",
+    "main.ea974e68.js.map": "/caixa-forte-patinhas/static/js/main.ea974e68.js.map",
+    "453.a17a4610.chunk.js.map": "/caixa-forte-patinhas/static/js/453.a17a4610.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6ddbe6f4.css",
+    "static/js/main.ea974e68.js"
+  ]
+}
