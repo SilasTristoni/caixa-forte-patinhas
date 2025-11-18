@@ -45,6 +45,18 @@ const PatinhasSlots = () => {
     const [patinhasMood, setPatinhasMood] = useState('neutral');
     const [balanceHistory, setBalanceHistory] = useState([STARTING_BALANCE]);
     const [winningCells, setWinningCells] = useState([]);
+    
+    // Estados para Estatisticas
+    const [stats, setStats] = useState({
+        totalWins: 0,
+        totalLosses: 0,
+        biggestWin: 0,
+        totalGainedLost: 0,
+        roundsPlayed: 0
+    });
+    
+    // Estados para Animacoes dos Banners
+    const [bannerAnimation, setBannerAnimation] = useState('neutral');
 
     useEffect(() => {
         // Pré-carrega os sons para uma melhor experiência
@@ -151,6 +163,17 @@ const PatinhasSlots = () => {
                 return newBal;
             });
             setWinningCells([...new Set(newWinningCells)]);
+            
+            setStats(prev => ({
+                ...prev,
+                totalWins: prev.totalWins + 1,
+                biggestWin: Math.max(prev.biggestWin, roundWin),
+                totalGainedLost: prev.totalGainedLost + roundWin,
+                roundsPlayed: prev.roundsPlayed + 1
+            }));
+            
+            setBannerAnimation('win');
+            setTimeout(() => setBannerAnimation('neutral'), 1500);
 
             if (roundWin < betAmount) {
                 setWinMessage(`Bateu na trave! Recuperou R$ ${roundWin.toFixed(2)}`);
@@ -166,6 +189,17 @@ const PatinhasSlots = () => {
             }
         } else {
             setBalanceHistory(h => [...h, balance]);
+            
+            setStats(prev => ({
+                ...prev,
+                totalLosses: prev.totalLosses + 1,
+                totalGainedLost: prev.totalGainedLost - betAmount,
+                roundsPlayed: prev.roundsPlayed + 1
+            }));
+            
+            setBannerAnimation('loss');
+            setTimeout(() => setBannerAnimation('neutral'), 1500);
+            
             if (nearMiss) {
                 setWinMessage('UUH! Foi quase!');
                 setPatinhasMood('shocked');
@@ -213,7 +247,33 @@ const PatinhasSlots = () => {
 
     return (
         <div className="patinhas-container">
-            <div className="banner banner-left"></div>
+            <div className={`banner banner-left animation-${bannerAnimation}`}>
+                <div className="stats-content">
+                    <h3>Estatisticas</h3>
+                    <div className="stat-item">
+                        <span className="stat-label">Rodadas:</span>
+                        <span className="stat-value">{stats.roundsPlayed}</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-label">Vitorias:</span>
+                        <span className="stat-value win-color">{stats.totalWins}</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-label">Derrotas:</span>
+                        <span className="stat-value loss-color">{stats.totalLosses}</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-label">Maior Vitoria:</span>
+                        <span className="stat-value">R$ {stats.biggestWin.toFixed(2)}</span>
+                    </div>
+                    <div className="stat-item total">
+                        <span className="stat-label">Total:</span>
+                        <span className={`stat-value ${stats.totalGainedLost >= 0 ? 'win-color' : 'loss-color'}`}>
+                            R$ {stats.totalGainedLost.toFixed(2)}
+                        </span>
+                    </div>
+                </div>
+            </div>
             <div className="game-area">
                 <div className={`patinhas-avatar mood-${patinhasMood}`}>
                     {patinhasMood === 'neutral' && '🦆'}
@@ -276,7 +336,28 @@ const PatinhasSlots = () => {
                     </ul>
                 </div>
             </div>
-            <div className="banner banner-right"></div>
+            <div className={`banner banner-right animation-${bannerAnimation}`}>
+                <div className="animation-content">
+                    {bannerAnimation === 'win' && (
+                        <div className="animation-message win-animation">
+                            <div className="animation-icon">🎉</div>
+                            <div className="animation-text">VITORIA!</div>
+                        </div>
+                    )}
+                    {bannerAnimation === 'loss' && (
+                        <div className="animation-message loss-animation">
+                            <div className="animation-icon">😢</div>
+                            <div className="animation-text">Perdeu</div>
+                        </div>
+                    )}
+                    {bannerAnimation === 'neutral' && (
+                        <div className="animation-message neutral-animation">
+                            <div className="animation-icon">🎲</div>
+                            <div className="animation-text">Pronto para Girar!</div>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

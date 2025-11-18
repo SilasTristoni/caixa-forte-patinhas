@@ -304,3 +304,170 @@
         gap: 20px;
     }
 }
+
+
+/* --- Conteudo dos Banners --- */
+.stats-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.stats-content h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+    font-size: 0.9rem;
+}
+
+.stat-item.total {
+    border-bottom: 2px solid #00ff00;
+    padding-top: 10px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #ccc;
+    text-align: left;
+}
+
+.stat-value {
+    color: #00ff00;
+    font-weight: bold;
+    text-align: right;
+    min-width: 80px;
+}
+
+.stat-value.win-color {
+    color: #00ff00;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+}
+
+.stat-value.loss-color {
+    color: #ff6b6b;
+    text-shadow: 0 0 5px rgba(255, 107, 107, 0.7);
+}
+
+/* --- Animacoes dos Banners --- */
+.animation-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.animation-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    height: 100%;
+}
+
+.animation-icon {
+    font-size: 4rem;
+    animation: bounce-icon 0.6s ease-in-out infinite;
+}
+
+.animation-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.win-animation .animation-icon {
+    animation: bounce-icon 0.6s ease-in-out infinite;
+}
+
+.win-animation .animation-text {
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
+
+.loss-animation .animation-icon {
+    animation: shake-icon 0.5s ease-in-out;
+}
+
+.loss-animation .animation-text {
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.7);
+}
+
+.neutral-animation .animation-icon {
+    animation: rotate-icon 2s linear infinite;
+}
+
+.neutral-animation .animation-text {
+    color: #ffeb3b;
+    text-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+}
+
+@keyframes bounce-icon {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.1); }
+}
+
+@keyframes shake-icon {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-10px) rotate(-5deg); }
+    75% { transform: translateX(10px) rotate(5deg); }
+}
+
+@keyframes rotate-icon {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- Animacoes do Banner ao Ganhar/Perder --- */
+.banner.animation-win {
+    animation: banner-win-pulse 1.5s ease-out;
+}
+
+.banner.animation-loss {
+    animation: banner-loss-shake 1.5s ease-out;
+}
+
+@keyframes banner-win-pulse {
+    0% { 
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1);
+    }
+    50% { 
+        box-shadow: 0 0 40px rgba(0, 255, 0, 0.8), inset 0 0 30px rgba(0, 255, 0, 0.3);
+        background: linear-gradient(135deg, rgba(0, 255, 0, 0.3), rgba(0, 255, 0, 0.15));
+    }
+    100% { 
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1);
+    }
+}
+
+@keyframes banner-loss-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
