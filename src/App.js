@@ -1,5 +1,6 @@
 import React from 'react';
 import PatinhasSlots from './components/PatinhasSlots';
+import PromoBanner from './components/PromoBanner';
 import './App.css';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <main>
         <PatinhasSlots />
       </main>
+      <PromoBanner />
       <footer className="footer-theme">
         <p>⚠️ Este simulador demonstra matematicamente como jogos de azar são projetados para sempre favorecer a "casa" a longo prazo.</p>
       </footer>

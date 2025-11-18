@@ -1,0 +1,168 @@
+.promo-banner-container {
+    width: 100%;
+    padding: 20px;
+    background-color: #121212;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.promo-banner {
+    width: 100%;
+    max-width: 1200px;
+    background: linear-gradient(145deg, #1a1a1a, #000);
+    border: 3px solid #00ff00;
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
+    transition: all 0.5s ease;
+    animation: promo-pulse 3s ease-in-out infinite;
+}
+
+@keyframes promo-pulse {
+    0%, 100% {
+        box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(0, 255, 0, 0.6);
+    }
+}
+
+.promo-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-height: 80px;
+}
+
+.promo-icon {
+    font-size: 3.5rem;
+    flex-shrink: 0;
+    animation: bounce-promo 0.6s ease-in-out infinite;
+}
+
+@keyframes bounce-promo {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.promo-text {
+    flex: 1;
+}
+
+.promo-title {
+    margin: 0 0 8px 0;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    letter-spacing: 1px;
+}
+
+.promo-description {
+    margin: 0;
+    font-size: 1rem;
+    color: #ccc;
+    line-height: 1.4;
+}
+
+.promo-nav-btn {
+    background: linear-gradient(to bottom, gold, darkgoldenrod);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2a0a0a;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 5px 0 #8B4513;
+}
+
+.promo-nav-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 #8B4513;
+}
+
+.promo-nav-btn:active:not(:disabled) {
+    transform: translateY(5px);
+    box-shadow: none;
+}
+
+.promo-nav-btn:disabled {
+    filter: grayscale(0.8);
+    cursor: not-allowed;
+}
+
+.promo-indicators {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.promo-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #00ff00;
+    background-color: rgba(0, 255, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 0;
+}
+
+.promo-dot:hover {
+    transform: scale(1.2);
+}
+
+.promo-dot.active {
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
+
+@media (max-width: 768px) {
+    .promo-banner {
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .promo-content {
+        flex-direction: column;
+        text-align: center;
+        min-height: auto;
+    }
+
+    .promo-title {
+        font-size: 1.2rem;
+    }
+
+    .promo-description {
+        font-size: 0.9rem;
+    }
+
+    .promo-icon {
+        font-size: 3rem;
+    }
+
+    .promo-nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
