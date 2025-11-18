@@ -1,43 +1,146 @@
 .patinhas-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     color: #fff;
+}
+
+.top-section {
+    display: flex;
+    gap: 20px;
     justify-content: center;
+    width: 100%;
+    align-items: stretch;
 }
 
 .game-area {
     background: linear-gradient(145deg, #1a1a1a, #000);
-    animation: pulseBg 5s infinite alternate;
     border: 3px solid #00ff00;
     box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
     border-radius: 20px;
     padding: 25px;
-    flex: 1 1 400px;
+    flex: 1;
     max-width: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
-/* --- Avatar --- */
-.patinhas-avatar {
-    font-size: 80px;
-    margin-bottom: 20px;
-    filter: drop-shadow(0 0 10px gold);
-    transition: all 0.3s ease;
+/* --- Dashboard Inferior (Stats + Gráfico) --- */
+.dashboard-container {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    justify-content: space-between;
 }
+
+.stats-panel, .chart-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    flex: 1;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+}
+
+.stats-panel h3, .chart-panel h3 {
+    margin-top: 0;
+    color: #00ff00;
+    text-align: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Estilos dos itens de estatística */
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 1.1rem;
+}
+.stat-item.total {
+    border-top: 2px solid #333;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.stat-value.win-color { color: #00ff00; }
+.stat-value.loss-color { color: #ff6b6b; }
+
+/* Estilos do Gráfico e Paytable Inline */
+.chart-box {
+    height: 200px;
+    width: 100%;
+}
+
+.paytable-inline {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+.paytable-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.paytable-icon { color: gold; }
+
+/* --- Banners Laterais --- */
+.banner {
+    width: 200px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.05));
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+}
+
+.animation-content {
+    text-align: center;
+}
+.animation-icon { font-size: 3rem; margin-bottom: 10px; }
+.animation-text { font-size: 1.5rem; }
+
+.win-animation { color: #00ff00; animation: bounce-icon 0.6s infinite; }
+.loss-animation { color: #ff6b6b; animation: shake-icon 0.5s; }
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    .top-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .banner {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+    }
+}
+
+/* --- Mantendo estilos originais do Grid, Avatar e HUD --- */
+.patinhas-avatar { font-size: 80px; margin-bottom: 20px; transition: all 0.3s ease; }
 .mood-happy { animation: bounce 0.6s infinite alternate; }
-.mood-shocked { animation: shake 0.5s; filter: drop-shadow(0 0 15px red); }
-
+.mood-shocked { animation: shake 0.5s; }
 @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px) scale(1.1); } }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-@keyframes pulseBg { from { box-shadow: 0 0 25px rgba(0, 255, 0, 0.3); } to { box-shadow: 0 0 40px rgba(0, 255, 0, 0.6); } }
 
-/* --- Grid 3x3 --- */
 .slots-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -45,429 +148,36 @@
     background-color: #222;
     padding: 15px;
     border-radius: 15px;
-    box-shadow: inset 0 0 20px #000;
     margin-bottom: 25px;
 }
-
 .grid-cell {
-    width: 80px;
-    height: 80px;
+    width: 80px; height: 80px;
     background: linear-gradient(145deg, #fff, #e6e6e6);
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 45px;
-    border: 3px solid transparent;
-    transition: all 0.2s;
-    cursor: default;
-    user-select: none;
-    overflow: hidden;
-    position: relative;
+    position: relative; overflow: hidden;
 }
-
-/* Motion Blur Vertical */
-.grid-cell.spinning {
-    color: transparent;
-    text-shadow: none;
-}
+.grid-cell.winner { border: 3px solid gold; background: #fffacd; }
+.grid-cell.spinning { color: transparent; box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); }
 .grid-cell.spinning::after {
-    content: '🪙\A💵\A💰\A💎\A🦆';
-    white-space: pre;
-    position: absolute;
-    top: -20px;
-    left: 0;
-    right: 0;
-    animation: verticalSpin 0.05s linear infinite; /* Giro ultra rápido */
-    filter: blur(5px);
-    opacity: 0.9;
-    font-size: 45px;
-    line-height: 80px;
+    content: '🪙\A💵\A💰'; white-space: pre;
+    position: absolute; animation: verticalSpin 0.1s linear infinite;
+    font-size: 40px; line-height: 80px; filter: blur(4px); opacity: 0.7;
 }
-.grid-cell.spinning {
-    box-shadow: 0 0 20px 5px rgba(0, 255, 0, 0.7); /* Brilho verde neon */
-}
-@keyframes verticalSpin {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-50%); }
-}
+@keyframes verticalSpin { 0% { transform: translateY(0); } 100% { transform: translateY(-66%); } }
 
-/* Paragem com impacto */
-.grid-cell.stopped {
-    animation: reelStop 0.2s ease-out; /* Mais rápido também */
-}
-@keyframes reelStop {
-    0% { transform: translateY(-50px) scale(0.8); opacity: 0.5; }
-    60% { transform: translateY(10px) scale(1.1); }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
-}
+.hud { width: 100%; text-align: center; }
+.win-message { color: gold; font-weight: bold; margin-bottom: 15px; min-height: 24px; }
+.balance-box { background: #000; padding: 10px; border-radius: 10px; border: 1px solid #333; margin-bottom: 15px; font-size: 1.2rem; }
+.controls { display: flex; gap: 10px; margin-bottom: 10px; }
+.bet-control { flex: 1; display: flex; flex-direction: column; text-align: left; font-size: 0.9rem; color: #ccc; }
+.bet-control select { padding: 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 5px; margin-top: 5px; }
+.spin-btn { flex: 2; background: gold; border: none; border-radius: 10px; font-weight: bold; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 0 #b8860b; }
+.spin-btn:active { transform: translateY(4px); box-shadow: none; }
+.spin-btn:disabled { filter: grayscale(1); cursor: not-allowed; }
+.sim-btn { width: 100%; padding: 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 5px; cursor: pointer; }
 
-.grid-cell.winner {
-    border-color: gold;
-    background: #fffacd;
-    animation: pulseWinner 0.8s infinite, confetti-rain 1.5s ease-out forwards;
-    z-index: 1;
-}
-
-@keyframes confetti-rain {
-    0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(200%) rotate(360deg); opacity: 0; }
-}
-@keyframes pulseWinner { 0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); } }
-
-/* --- HUD --- */
-.hud {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.win-message {
-    min-height: 30px;
-    color: gold;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 15px;
-    text-shadow: 0 0 5px #000, 0 0 15px gold;
-    font-size: 1.2rem;
-    animation: win-glow 1s infinite alternate;
-}
-
-@keyframes win-glow {
-    from { text-shadow: 0 0 5px #000, 0 0 15px gold; }
-    to { text-shadow: 0 0 10px #000, 0 0 30px gold, 0 0 50px yellow; }
-}
-
-.balance-box {
-    font-size: 1.5rem;
-    background-color: #000;
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: 1px solid #333;
-    margin-bottom: 20px;
-    width: 100%;
-    text-align: center;
-    box-sizing: border-box;
-}
-
-.controls {
-    display: flex;
-    gap: 15px;
-    width: 100%;
-    margin-bottom: 15px;
-}
-
-.bet-control {
-    display: flex;
-    flex-direction: column;
-    color: #ccc;
-    flex: 1;
-}
-.bet-control select {
-    padding: 12px;
-    border-radius: 8px;
-    background: #333;
-    color: #fff;
-    border: 1px solid gold;
-    font-size: 1.1rem;
-    margin-top: 5px;
-}
-
-.spin-btn {
-    flex: 2;
-    background: linear-gradient(to bottom, gold, darkgoldenrod);
-    border: none;
-    border-radius: 12px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #2a0a0a;
-    cursor: pointer;
-    box-shadow: 0 5px 0 #8B4513;
-    transition: all 0.1s;
-}
-.spin-btn:active:not(:disabled) {
-    transform: translateY(5px);
-    box-shadow: none;
-}
-.spin-btn:disabled {
-    filter: grayscale(0.8);
-    cursor: not-allowed;
-}
-
-.sim-btn {
-    background: #333;
-    color: #aaa;
-    border: 1px solid #555;
-    padding: 12px;
-    width: 100%;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-}
-.sim-btn:hover:not(:disabled) { background: #444; color: #fff; border-color: #fff; }
-
-/* --- Stats Area --- */
-.chart-box {
-    width: 100%;
-    height: 250px;
-    background: rgba(255,255,255,0.02);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-}
-
-.paytable {
-    width: 100%;
-    font-size: 0.9rem;
-    color: #ccc;
-    background: rgba(0,0,0,0.3);
-    padding: 15px;
-    border-radius: 10px;
-    box-sizing: border-box;
-}
-.paytable h4 { margin-top: 0; color: gold; }
-.paytable ul { list-style: none; padding: 0; margin: 15px 0 0 0; }
-.paytable li { 
-    margin-bottom: 10px; 
-    border-bottom: 1px solid #333; 
-    padding-bottom: 8px; 
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.symbol-icon {
-    font-size: 45px;
-    color: #333;
-}
-
-.paytable-icon {
-    font-size: 1.2rem;
-    color: gold;
-}
-
-/* --- Banners Laterais --- */
-.banner {
-    flex: 0 0 auto;
-    width: 280px;
-    height: 600px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-    box-sizing: border-box;
-    background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.05));
-    border: 2px solid #00ff00;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-.banner::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(180deg, rgba(0, 255, 0, 0.2) 0%, transparent 50%, rgba(0, 255, 0, 0.2) 100%);
-    pointer-events: none;
-    animation: bannerPulse 4s ease-in-out infinite;
-}
-
-@keyframes bannerPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.7; }
-}
-
-.banner-left, .banner-right {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Responsivo: Ocultar banners em telas pequenas */
-@media (max-width: 1024px) {
-    .banner {
-        display: none;
-    }
-    
-    .patinhas-container {
-        gap: 20px;
-    }
-}
-
-
-/* --- Conteudo dos Banners --- */
-.stats-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    position: relative;
-    z-index: 1;
-}
-
-.stats-content h3 {
-    margin: 0;
-    font-size: 1.3rem;
-    color: #00ff00;
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    border-bottom: 2px solid #00ff00;
-    padding-bottom: 10px;
-    width: 100%;
-    text-align: center;
-}
-
-.stat-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 90%;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(0, 255, 0, 0.2);
-    font-size: 0.9rem;
-}
-
-.stat-item.total {
-    border-bottom: 2px solid #00ff00;
-    padding-top: 10px;
-    margin-top: 5px;
-    font-weight: bold;
-}
-
-.stat-label {
-    color: #ccc;
-    text-align: left;
-}
-
-.stat-value {
-    color: #00ff00;
-    font-weight: bold;
-    text-align: right;
-    min-width: 80px;
-}
-
-.stat-value.win-color {
-    color: #00ff00;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
-}
-
-.stat-value.loss-color {
-    color: #ff6b6b;
-    text-shadow: 0 0 5px rgba(255, 107, 107, 0.7);
-}
-
-/* --- Animacoes dos Banners --- */
-.animation-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
-}
-
-.animation-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    width: 100%;
-    height: 100%;
-}
-
-.animation-icon {
-    font-size: 4rem;
-    animation: bounce-icon 0.6s ease-in-out infinite;
-}
-
-.animation-text {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-}
-
-.win-animation .animation-icon {
-    animation: bounce-icon 0.6s ease-in-out infinite;
-}
-
-.win-animation .animation-text {
-    color: #00ff00;
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-}
-
-.loss-animation .animation-icon {
-    animation: shake-icon 0.5s ease-in-out;
-}
-
-.loss-animation .animation-text {
-    color: #ff6b6b;
-    text-shadow: 0 0 10px rgba(255, 107, 107, 0.7);
-}
-
-.neutral-animation .animation-icon {
-    animation: rotate-icon 2s linear infinite;
-}
-
-.neutral-animation .animation-text {
-    color: #ffeb3b;
-    text-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
-}
-
-@keyframes bounce-icon {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-20px) scale(1.1); }
-}
-
-@keyframes shake-icon {
-    0%, 100% { transform: translateX(0) rotate(0deg); }
-    25% { transform: translateX(-10px) rotate(-5deg); }
-    75% { transform: translateX(10px) rotate(5deg); }
-}
-
-@keyframes rotate-icon {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* --- Animacoes do Banner ao Ganhar/Perder --- */
-.banner.animation-win {
-    animation: banner-win-pulse 1.5s ease-out;
-}
-
-.banner.animation-loss {
-    animation: banner-loss-shake 1.5s ease-out;
-}
-
-@keyframes banner-win-pulse {
-    0% { 
-        box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1);
-    }
-    50% { 
-        box-shadow: 0 0 40px rgba(0, 255, 0, 0.8), inset 0 0 30px rgba(0, 255, 0, 0.3);
-        background: linear-gradient(135deg, rgba(0, 255, 0, 0.3), rgba(0, 255, 0, 0.15));
-    }
-    100% { 
-        box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1);
-    }
-}
-
-@keyframes banner-loss-shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-}
+/* Animações dos ícones de banner */
+@keyframes bounce-icon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes shake-icon { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }

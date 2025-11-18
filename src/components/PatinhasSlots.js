@@ -4,19 +4,18 @@ import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend,
 } from 'chart.js';
-import { FaCoins, FaDollarSign, FaGem, FaFeather } from 'react-icons/fa';
 import './PatinhasSlots.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 // --- CONFIGURAÇÃO DO JOGO ---
-
+// Voltando para os emojis (strings) em vez de componentes React Icons
 const SYMBOLS = [
-    { id: 1, icon: FaCoins, label: 'Moeda', value: 0.5, weight: 45 },
-    { id: 2, icon: FaDollarSign, label: 'Dólar', value: 1, weight: 30 },
-    { id: 3, icon: FaDollarSign, label: 'Dinheiro', value: 3, weight: 15 },
-    { id: 4, icon: FaGem, label: 'Joia', value: 10, weight: 8 },
-    { id: 5, icon: FaFeather, label: 'Pato', value: 50, weight: 2 }
+    { id: 1, icon: '🪙', label: 'Moeda', value: 0.5, weight: 45 },
+    { id: 2, icon: '💵', label: 'Dólar', value: 1, weight: 30 },
+    { id: 3, icon: '💰', label: 'Dinheiro', value: 3, weight: 15 },
+    { id: 4, icon: '💎', label: 'Joia', value: 10, weight: 8 },
+    { id: 5, icon: '🦆', label: 'Pato', value: 50, weight: 2 }
 ];
 
 const PAYLINES = [
@@ -39,7 +38,6 @@ const PatinhasSlots = () => {
     const [balance, setBalance] = useState(STARTING_BALANCE);
     const [betAmount, setBetAmount] = useState(10);
     const [grid, setGrid] = useState(Array(9).fill(SYMBOLS[0]));
-    // Estado para controlar quais colunas estão a girar individualmente [col0, col1, col2]
     const [spinningCols, setSpinningCols] = useState([false, false, false]);
     const [winMessage, setWinMessage] = useState('Multiplique sua fortuna!');
     const [patinhasMood, setPatinhasMood] = useState('neutral');
@@ -59,24 +57,18 @@ const PatinhasSlots = () => {
     const [bannerAnimation, setBannerAnimation] = useState('neutral');
 
     useEffect(() => {
-        // Pré-carrega os sons para uma melhor experiência
-        // A função preloadSounds não foi exportada, mas a lógica está no useSound.js
-        // A simples chamada a playSound já fará o Howler carregar o som na primeira vez.
+        // Pré-carrega os sons
     }, []);
 
-    // Verifica se alguma coluna ainda está a girar
     const isAnySpinning = spinningCols.some(Boolean);
 
-    // Efeito sonoro visual (troca de humor na falência)
     useEffect(() => {
         if (balance <= 0) setPatinhasMood('shocked');
     }, [balance]);
 
-    // Efeito visual de giro contínuo para as colunas ativas
     useEffect(() => {
         if (!isAnySpinning) return;
 
-        // Aumentei a velocidade de atualização visual para 30ms para parecer mais rápido
         const interval = setInterval(() => {
             setGrid(currentGrid => currentGrid.map((symbol, i) => {
                 if (spinningCols[i % 3]) return getRandomSymbol();
@@ -90,7 +82,6 @@ const PatinhasSlots = () => {
     const spin = useCallback(() => {
         if (balance < betAmount || isAnySpinning) return;
 
-        // 1. Iniciar o giro
         setBalance(prev => prev - betAmount);
         setWinMessage('GIRANDO...');
         setPatinhasMood('neutral');
@@ -98,14 +89,10 @@ const PatinhasSlots = () => {
         setSpinningCols([true, true, true]);
         playSound('spinStart');
 
-        // 2. Pré-determinar o resultado
         const finalGrid = Array.from({ length: 9 }, () => getRandomSymbol());
+        const STOP_DELAY = 500; 
+        const STAGGER = 300;    
 
-        // 3. Agendar paragens escalonadas (Vezes mais rápidas agora)
-        const STOP_DELAY = 500; // 0.5s até a primeira parar (era 1000)
-        const STAGGER = 300;    // 0.3s entre cada coluna (era 600)
-
-        // Parar Coluna 1
         setTimeout(() => {
             setSpinningCols([false, true, true]);
             setGrid(current => {
@@ -116,7 +103,6 @@ const PatinhasSlots = () => {
             playSound('reelStop');
         }, STOP_DELAY);
 
-        // Parar Coluna 2
         setTimeout(() => {
             setSpinningCols([false, false, true]);
             setGrid(current => {
@@ -127,7 +113,6 @@ const PatinhasSlots = () => {
             playSound('reelStop');
         }, STOP_DELAY + STAGGER);
 
-        // Parar Coluna 3 e finalizar
         setTimeout(() => {
             setSpinningCols([false, false, false]);
             setGrid(finalGrid);
@@ -147,6 +132,7 @@ const PatinhasSlots = () => {
             const s2 = finalGrid[line[1]];
             const s3 = finalGrid[line[2]];
 
+            // Comparação agora é feita pelo ID, pois os ícones são strings
             if (s1.id === s2.id && s2.id === s3.id) {
                 roundWin += betAmount * s1.value;
                 newWinningCells.push(...line);
@@ -173,7 +159,7 @@ const PatinhasSlots = () => {
             }));
             
             setBannerAnimation('win');
-            setTimeout(() => setBannerAnimation('neutral'), 1500);
+            setTimeout(() => setBannerAnimation('neutral'), 2000);
 
             if (roundWin < betAmount) {
                 setWinMessage(`Bateu na trave! Recuperou R$ ${roundWin.toFixed(2)}`);
@@ -198,7 +184,7 @@ const PatinhasSlots = () => {
             }));
             
             setBannerAnimation('loss');
-            setTimeout(() => setBannerAnimation('neutral'), 1500);
+            setTimeout(() => setBannerAnimation('neutral'), 2000);
             
             if (nearMiss) {
                 setWinMessage('UUH! Foi quase!');
@@ -247,15 +233,83 @@ const PatinhasSlots = () => {
 
     return (
         <div className="patinhas-container">
-            <div className={`banner banner-left animation-${bannerAnimation}`}>
-                <div className="stats-content">
-                    <h3>Estatisticas</h3>
+            <div className="top-section">
+                <div className="game-area">
+                    <div className={`patinhas-avatar mood-${patinhasMood}`}>
+                        {patinhasMood === 'neutral' && '🦆'}
+                        {patinhasMood === 'happy' && '🤑'}
+                        {patinhasMood === 'angry' && '😤'}
+                        {patinhasMood === 'shocked' && '😱'}
+                    </div>
+
+                    <div className="slots-grid">
+                        {grid.map((symbol, i) => {
+                            const isColSpinning = spinningCols[i % 3];
+                            return (
+                                <div key={i} className={`grid-cell ${winningCells.includes(i) ? 'winner' : ''} ${isColSpinning ? 'spinning' : 'stopped'}`}>
+                                    {/* Renderizando o emoji diretamente */}
+                                    <span className="symbol-icon">{symbol.icon}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="hud">
+                        <div className="win-message">{winMessage}</div>
+                        <div className="balance-box">
+                            SALDO: <span style={{color: balance < 100 ? 'red' : '#00ff00'}}>R$ {balance.toFixed(2)}</span>
+                        </div>
+                        
+                        <div className="controls">
+                            <div className="bet-control">
+                                <span>Aposta:</span>
+                                <select value={betAmount} onChange={(e) => setBetAmount(Number(e.target.value))} disabled={isAnySpinning}>
+                                    <option value={10}>R$ 10</option>
+                                    <option value={50}>R$ 50</option>
+                                    <option value={100}>R$ 100</option>
+                                </select>
+                            </div>
+                            <button className="spin-btn" onClick={spin} disabled={isAnySpinning || balance < betAmount}>
+                                {isAnySpinning ? '...' : 'GIRAR!'}
+                            </button>
+                        </div>
+                        <button className="sim-btn" onClick={runSimulation} disabled={isAnySpinning}>
+                            ⏩ Avançar 100 Rodadas
+                        </button>
+                    </div>
+                </div>
+
+                {/* Banner Lateral Direito (Somente Vitória/Derrota) */}
+                { (bannerAnimation === 'win' || bannerAnimation === 'loss') && (
+                    <div className={`banner banner-right animation-${bannerAnimation}`}>
+                        <div className="animation-content">
+                            {bannerAnimation === 'win' && (
+                                <div className="animation-message win-animation">
+                                    <div className="animation-icon">🎉</div>
+                                    <div className="animation-text">VITORIA!</div>
+                                </div>
+                            )}
+                            {bannerAnimation === 'loss' && (
+                                <div className="animation-message loss-animation">
+                                    <div className="animation-icon">😢</div>
+                                    <div className="animation-text">Perdeu</div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Nova área inferior com Estatísticas e Gráfico lado a lado */}
+            <div className="dashboard-container">
+                <div className="stats-panel">
+                    <h3>Estatísticas</h3>
                     <div className="stat-item">
                         <span className="stat-label">Rodadas:</span>
                         <span className="stat-value">{stats.roundsPlayed}</span>
                     </div>
                     <div className="stat-item">
-                        <span className="stat-label">Vitorias:</span>
+                        <span className="stat-label">Vitórias:</span>
                         <span className="stat-value win-color">{stats.totalWins}</span>
                     </div>
                     <div className="stat-item">
@@ -263,99 +317,29 @@ const PatinhasSlots = () => {
                         <span className="stat-value loss-color">{stats.totalLosses}</span>
                     </div>
                     <div className="stat-item">
-                        <span className="stat-label">Maior Vitoria:</span>
+                        <span className="stat-label">Maior Vitória:</span>
                         <span className="stat-value">R$ {stats.biggestWin.toFixed(2)}</span>
                     </div>
                     <div className="stat-item total">
-                        <span className="stat-label">Total:</span>
+                        <span className="stat-label">L/P Total:</span>
                         <span className={`stat-value ${stats.totalGainedLost >= 0 ? 'win-color' : 'loss-color'}`}>
                             R$ {stats.totalGainedLost.toFixed(2)}
                         </span>
                     </div>
                 </div>
-            </div>
-            <div className="game-area">
-                <div className={`patinhas-avatar mood-${patinhasMood}`}>
-                    {patinhasMood === 'neutral' && '🦆'}
-                    {patinhasMood === 'happy' && '🤑'}
-                    {patinhasMood === 'angry' && '😤'}
-                    {patinhasMood === 'shocked' && '😱'}
-                </div>
 
-                <div className="slots-grid">
-                    {grid.map((symbol, i) => {
-                        const isColSpinning = spinningCols[i % 3];
-                        const IconComponent = symbol.icon;
-                        return (
-                            <div key={i} className={`grid-cell ${winningCells.includes(i) ? 'winner' : ''} ${isColSpinning ? 'spinning' : 'stopped'}`}>
-                                <IconComponent className="symbol-icon" />
-                            </div>
-                        );
-                    })}
-                </div>
-
-                <div className="hud">
-                    <div className="win-message">{winMessage}</div>
-                    <div className="balance-box">
-                        SALDO: <span style={{color: balance < 100 ? 'red' : '#00ff00'}}>R$ {balance.toFixed(2)}</span>
+                <div className="chart-panel">
+                    <h3>Sua Jornada Financeira</h3>
+                    <div className="chart-box">
+                        <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false} }, scales: { x: {display:false}, y: {grid: {color: '#333'}} } }} />
                     </div>
-                    
-                    <div className="controls">
-                        <div className="bet-control">
-                            <span>Aposta:</span>
-                            <select value={betAmount} onChange={(e) => setBetAmount(Number(e.target.value))} disabled={isAnySpinning}>
-                                <option value={10}>R$ 10</option>
-                                <option value={50}>R$ 50</option>
-                                <option value={100}>R$ 100</option>
-                            </select>
-                        </div>
-                        <button className="spin-btn" onClick={spin} disabled={isAnySpinning || balance < betAmount}>
-                            {isAnySpinning ? '...' : 'GIRAR!'}
-                        </button>
+                    <div className="paytable-inline">
+                        {SYMBOLS.map(s => (
+                            <span key={s.id} className="paytable-item">
+                                <span className="paytable-icon">{s.icon}</span> x3 = {s.value}x
+                            </span>
+                        ))}
                     </div>
-                    <button className="sim-btn" onClick={runSimulation} disabled={isAnySpinning}>
-                        ⏩ Avançar 100 Rodadas
-                    </button>
-                </div>
-            </div>
-
-            <div className="stats-area">
-                <h3>Sua Jornada Financeira</h3>
-                <div className="chart-box">
-                    <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false} }, scales: { x: {display:false}, y: {grid: {color: '#333'}} } }} />
-                </div>
-                <div className="paytable">
-                    <h4>Pagamentos</h4>
-                    <ul>
-                        {SYMBOLS.map(s => {
-                            const IconComponent = s.icon;
-                            return (
-                                <li key={s.id}><IconComponent className="paytable-icon" /> x3 = {s.value}x aposta</li>
-                            );
-                        })}
-                    </ul>
-                </div>
-            </div>
-            <div className={`banner banner-right animation-${bannerAnimation}`}>
-                <div className="animation-content">
-                    {bannerAnimation === 'win' && (
-                        <div className="animation-message win-animation">
-                            <div className="animation-icon">🎉</div>
-                            <div className="animation-text">VITORIA!</div>
-                        </div>
-                    )}
-                    {bannerAnimation === 'loss' && (
-                        <div className="animation-message loss-animation">
-                            <div className="animation-icon">😢</div>
-                            <div className="animation-text">Perdeu</div>
-                        </div>
-                    )}
-                    {bannerAnimation === 'neutral' && (
-                        <div className="animation-message neutral-animation">
-                            <div className="animation-icon">🎲</div>
-                            <div className="animation-text">Pronto para Girar!</div>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
