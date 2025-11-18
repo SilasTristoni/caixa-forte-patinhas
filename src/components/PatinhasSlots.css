@@ -3,138 +3,106 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1400px; /* Aumentado para caber as 3 colunas */
     margin: 0 auto;
     padding: 20px;
     color: #fff;
+    box-sizing: border-box;
 }
 
-.top-section {
+/* --- Layout Principal de 3 Colunas --- */
+.main-layout {
     display: flex;
+    width: 100%;
     gap: 20px;
     justify-content: center;
-    width: 100%;
-    align-items: stretch;
+    align-items: flex-start; /* Alinha os topos */
 }
 
+/* Área Central do Jogo */
 .game-area {
+    flex: 0 0 400px; /* Largura fixa para o jogo não esticar demais */
     background: linear-gradient(145deg, #1a1a1a, #000);
     border: 3px solid #00ff00;
     box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
     border-radius: 20px;
     padding: 25px;
-    flex: 1;
-    max-width: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
 }
 
-/* --- Dashboard Inferior (Stats + Gráfico) --- */
-.dashboard-container {
-    display: flex;
-    width: 100%;
-    gap: 20px;
-    justify-content: space-between;
-}
-
-.stats-panel, .chart-panel {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    padding: 20px;
+/* Painéis Laterais (Esquerda e Direita) */
+.side-panel {
     flex: 1;
-    border: 1px solid rgba(0, 255, 0, 0.2);
+    min-width: 300px; /* Largura mínima para não quebrar o gráfico/stats */
+    background: #000; /* Fundo preto sólido como na referência */
+    border: 3px solid #00ff00; /* Borda verde neon igual à referência */
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-.stats-panel h3, .chart-panel h3 {
+.side-panel h3 {
     margin-top: 0;
     color: #00ff00;
     text-align: center;
     border-bottom: 1px solid #333;
     padding-bottom: 10px;
     margin-bottom: 15px;
+    font-size: 1.2rem;
 }
 
-/* Estilos dos itens de estatística */
+/* --- Estilos Específicos das Estatísticas --- */
 .stat-item {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 1.1rem;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 1rem;
 }
 .stat-item.total {
     border-top: 2px solid #333;
-    margin-top: 10px;
+    margin-top: auto; /* Empurra para o fundo se sobrar espaço */
+    padding-top: 20px;
     font-weight: bold;
     font-size: 1.2rem;
 }
 .stat-value.win-color { color: #00ff00; }
 .stat-value.loss-color { color: #ff6b6b; }
 
-/* Estilos do Gráfico e Paytable Inline */
+/* --- Estilos do Gráfico e Paytable --- */
 .chart-box {
-    height: 200px;
+    height: 250px;
     width: 100%;
+    margin-bottom: 20px;
 }
 
 .paytable-inline {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-top: 15px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: #aaa;
+    margin-top: auto; /* Empurra para o fundo */
 }
 .paytable-item {
     display: flex;
     align-items: center;
     gap: 5px;
+    background: #222;
+    padding: 5px 8px;
+    border-radius: 5px;
 }
 .paytable-icon { color: gold; }
 
-/* --- Banners Laterais --- */
-.banner {
-    width: 200px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.05));
-    border: 2px solid #00ff00;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-}
 
-.animation-content {
-    text-align: center;
-}
-.animation-icon { font-size: 3rem; margin-bottom: 10px; }
-.animation-text { font-size: 1.5rem; }
-
-.win-animation { color: #00ff00; animation: bounce-icon 0.6s infinite; }
-.loss-animation { color: #ff6b6b; animation: shake-icon 0.5s; }
-
-/* Responsivo */
-@media (max-width: 768px) {
-    .dashboard-container {
-        flex-direction: column;
-    }
-    .top-section {
-        flex-direction: column;
-        align-items: center;
-    }
-    .banner {
-        width: 100%;
-        height: auto;
-        padding: 10px;
-    }
-}
-
-/* --- Mantendo estilos originais do Grid, Avatar e HUD --- */
+/* --- Estilos Internos do Jogo (Mantidos) --- */
 .patinhas-avatar { font-size: 80px; margin-bottom: 20px; transition: all 0.3s ease; }
 .mood-happy { animation: bounce 0.6s infinite alternate; }
 .mood-shocked { animation: shake 0.5s; }
@@ -168,7 +136,7 @@
 @keyframes verticalSpin { 0% { transform: translateY(0); } 100% { transform: translateY(-66%); } }
 
 .hud { width: 100%; text-align: center; }
-.win-message { color: gold; font-weight: bold; margin-bottom: 15px; min-height: 24px; }
+.win-message { color: gold; font-weight: bold; margin-bottom: 15px; min-height: 24px; font-size: 1.1rem; }
 .balance-box { background: #000; padding: 10px; border-radius: 10px; border: 1px solid #333; margin-bottom: 15px; font-size: 1.2rem; }
 .controls { display: flex; gap: 10px; margin-bottom: 10px; }
 .bet-control { flex: 1; display: flex; flex-direction: column; text-align: left; font-size: 0.9rem; color: #ccc; }
@@ -178,6 +146,35 @@
 .spin-btn:disabled { filter: grayscale(1); cursor: not-allowed; }
 .sim-btn { width: 100%; padding: 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 5px; cursor: pointer; }
 
-/* Animações dos ícones de banner */
-@keyframes bounce-icon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes shake-icon { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+/* --- Responsividade --- */
+@media (max-width: 1024px) {
+    .main-layout {
+        flex-wrap: wrap;
+    }
+    .game-area {
+        order: 1; /* Jogo vem primeiro no topo em telas médias */
+        width: 100%;
+        flex: auto;
+    }
+    .side-panel {
+        order: 2;
+        width: 45%; /* Paineis lado a lado embaixo do jogo */
+        min-width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    .side-panel {
+        width: 100%; /* Paineis empilhados em telas pequenas */
+        order: 2;
+    }
+    .game-area {
+        width: 100%;
+        order: 1;
+    }
+}

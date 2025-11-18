@@ -9,7 +9,6 @@ import './PatinhasSlots.css';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 // --- CONFIGURAÇÃO DO JOGO ---
-// Voltando para os emojis (strings) em vez de componentes React Icons
 const SYMBOLS = [
     { id: 1, icon: '🪙', label: 'Moeda', value: 0.5, weight: 45 },
     { id: 2, icon: '💵', label: 'Dólar', value: 1, weight: 30 },
@@ -53,8 +52,7 @@ const PatinhasSlots = () => {
         roundsPlayed: 0
     });
     
-    // Estados para Animacoes dos Banners
-    const [bannerAnimation, setBannerAnimation] = useState('neutral');
+    // REMOVIDO: Estados e lógica de bannerAnimation
 
     useEffect(() => {
         // Pré-carrega os sons
@@ -132,7 +130,6 @@ const PatinhasSlots = () => {
             const s2 = finalGrid[line[1]];
             const s3 = finalGrid[line[2]];
 
-            // Comparação agora é feita pelo ID, pois os ícones são strings
             if (s1.id === s2.id && s2.id === s3.id) {
                 roundWin += betAmount * s1.value;
                 newWinningCells.push(...line);
@@ -158,8 +155,7 @@ const PatinhasSlots = () => {
                 roundsPlayed: prev.roundsPlayed + 1
             }));
             
-            setBannerAnimation('win');
-            setTimeout(() => setBannerAnimation('neutral'), 2000);
+            // REMOVIDO: setBannerAnimation('win');
 
             if (roundWin < betAmount) {
                 setWinMessage(`Bateu na trave! Recuperou R$ ${roundWin.toFixed(2)}`);
@@ -183,8 +179,7 @@ const PatinhasSlots = () => {
                 roundsPlayed: prev.roundsPlayed + 1
             }));
             
-            setBannerAnimation('loss');
-            setTimeout(() => setBannerAnimation('neutral'), 2000);
+            // REMOVIDO: setBannerAnimation('loss');
             
             if (nearMiss) {
                 setWinMessage('UUH! Foi quase!');
@@ -233,7 +228,37 @@ const PatinhasSlots = () => {
 
     return (
         <div className="patinhas-container">
-            <div className="top-section">
+            {/* Novo layout de 3 colunas */}
+            <div className="main-layout">
+                
+                {/* COLUNA ESQUERDA: ESTATÍSTICAS */}
+                <div className="side-panel left-panel">
+                    <h3>Estatísticas</h3>
+                    <div className="stat-item">
+                        <span className="stat-label">Rodadas:</span>
+                        <span className="stat-value">{stats.roundsPlayed}</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-label">Vitórias:</span>
+                        <span className="stat-value win-color">{stats.totalWins}</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-label">Derrotas:</span>
+                        <span className="stat-value loss-color">{stats.totalLosses}</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-label">Maior Vitória:</span>
+                        <span className="stat-value">R$ {stats.biggestWin.toFixed(2)}</span>
+                    </div>
+                    <div className="stat-item total">
+                        <span className="stat-label">L/P Total:</span>
+                        <span className={`stat-value ${stats.totalGainedLost >= 0 ? 'win-color' : 'loss-color'}`}>
+                            R$ {stats.totalGainedLost.toFixed(2)}
+                        </span>
+                    </div>
+                </div>
+
+                {/* COLUNA CENTRAL: ÁREA DO JOGO */}
                 <div className="game-area">
                     <div className={`patinhas-avatar mood-${patinhasMood}`}>
                         {patinhasMood === 'neutral' && '🦆'}
@@ -247,7 +272,6 @@ const PatinhasSlots = () => {
                             const isColSpinning = spinningCols[i % 3];
                             return (
                                 <div key={i} className={`grid-cell ${winningCells.includes(i) ? 'winner' : ''} ${isColSpinning ? 'spinning' : 'stopped'}`}>
-                                    {/* Renderizando o emoji diretamente */}
                                     <span className="symbol-icon">{symbol.icon}</span>
                                 </div>
                             );
@@ -279,59 +303,25 @@ const PatinhasSlots = () => {
                     </div>
                 </div>
 
-                {/* Banner Lateral Direito (Somente Vitória/Derrota) */}
-                { (bannerAnimation === 'win' || bannerAnimation === 'loss') && (
-                    <div className={`banner banner-right animation-${bannerAnimation}`}>
-                        <div className="animation-content">
-                            {bannerAnimation === 'win' && (
-                                <div className="animation-message win-animation">
-                                    <div className="animation-icon">🎉</div>
-                                    <div className="animation-text">VITORIA!</div>
-                                </div>
-                            )}
-                            {bannerAnimation === 'loss' && (
-                                <div className="animation-message loss-animation">
-                                    <div className="animation-icon">😢</div>
-                                    <div className="animation-text">Perdeu</div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* Nova área inferior com Estatísticas e Gráfico lado a lado */}
-            <div className="dashboard-container">
-                <div className="stats-panel">
-                    <h3>Estatísticas</h3>
-                    <div className="stat-item">
-                        <span className="stat-label">Rodadas:</span>
-                        <span className="stat-value">{stats.roundsPlayed}</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="stat-label">Vitórias:</span>
-                        <span className="stat-value win-color">{stats.totalWins}</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="stat-label">Derrotas:</span>
-                        <span className="stat-value loss-color">{stats.totalLosses}</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="stat-label">Maior Vitória:</span>
-                        <span className="stat-value">R$ {stats.biggestWin.toFixed(2)}</span>
-                    </div>
-                    <div className="stat-item total">
-                        <span className="stat-label">L/P Total:</span>
-                        <span className={`stat-value ${stats.totalGainedLost >= 0 ? 'win-color' : 'loss-color'}`}>
-                            R$ {stats.totalGainedLost.toFixed(2)}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="chart-panel">
+                {/* COLUNA DIREITA: GRÁFICO */}
+                <div className="side-panel right-panel">
                     <h3>Sua Jornada Financeira</h3>
                     <div className="chart-box">
-                        <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false} }, scales: { x: {display:false}, y: {grid: {color: '#333'}} } }} />
+                        <Line 
+                            data={chartData} 
+                            options={{ 
+                                responsive: true, 
+                                maintainAspectRatio: false, 
+                                plugins: { legend: {display: false} }, 
+                                scales: { 
+                                    x: {display:false}, 
+                                    y: {
+                                        grid: {color: '#333'},
+                                        ticks: { color: '#aaa', font: {size: 10} } 
+                                    } 
+                                } 
+                            }} 
+                        />
                     </div>
                     <div className="paytable-inline">
                         {SYMBOLS.map(s => (
@@ -341,6 +331,7 @@ const PatinhasSlots = () => {
                         ))}
                     </div>
                 </div>
+
             </div>
         </div>
     );
