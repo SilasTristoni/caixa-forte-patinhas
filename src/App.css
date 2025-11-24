@@ -44,3 +44,24 @@ main {
   font-size: 0.8rem;
   border-top: 1px solid #333;
 }
+
+.App-header-theme h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px #000;
+  line-height: 1.2; /* Adicionado para evitar sobreposição se quebrar linha */
+}
+
+/* Adicionar Media Query para o Header */
+@media (max-width: 480px) {
+  .App-header-theme h1 {
+    font-size: 1.8rem; /* Fonte menor no celular */
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+    padding: 0 10px; /* Margem lateral para não colar na borda */
+  }
+}

@@ -1,45 +1,49 @@
+/* src/components/PatinhasSlots.css */
+
 .patinhas-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
     width: 100%;
-    max-width: 1400px; /* Aumentado para caber as 3 colunas */
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px; /* Reduzido padding para telas pequenas */
     color: #fff;
     box-sizing: border-box;
 }
 
-/* --- Layout Principal de 3 Colunas --- */
+/* --- Layout Principal --- */
 .main-layout {
     display: flex;
     width: 100%;
     gap: 20px;
     justify-content: center;
-    align-items: flex-start; /* Alinha os topos */
+    align-items: flex-start;
 }
 
 /* Área Central do Jogo */
 .game-area {
-    flex: 0 0 400px; /* Largura fixa para o jogo não esticar demais */
+    /* MUDANÇA: Removemos o flex fixo e usamos max-width */
+    width: 100%;
+    max-width: 400px; 
     background: linear-gradient(145deg, #1a1a1a, #000);
     border: 3px solid #00ff00;
     box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
     border-radius: 20px;
-    padding: 25px;
+    padding: 20px; /* Reduzido levemente */
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
 }
 
-/* Painéis Laterais (Esquerda e Direita) */
+/* Painéis Laterais */
 .side-panel {
     flex: 1;
-    min-width: 300px; /* Largura mínima para não quebrar o gráfico/stats */
-    background: #000; /* Fundo preto sólido como na referência */
-    border: 3px solid #00ff00; /* Borda verde neon igual à referência */
+    min-width: 250px; /* Reduzido para caber melhor em tablets */
+    background: #000;
+    border: 3px solid #00ff00;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
     border-radius: 20px;
     padding: 20px;
@@ -47,68 +51,30 @@
     flex-direction: column;
 }
 
-.side-panel h3 {
-    margin-top: 0;
-    color: #00ff00;
-    text-align: center;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-}
-
-/* --- Estilos Específicos das Estatísticas --- */
-.stat-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    font-size: 1rem;
-}
-.stat-item.total {
-    border-top: 2px solid #333;
-    margin-top: auto; /* Empurra para o fundo se sobrar espaço */
-    padding-top: 20px;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
+/* ... (Mantenha os estilos de .stat-item, .stat-value, .chart-box, .paytable igual ao original) ... */
+.stat-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
+.stat-item.total { border-top: 2px solid #333; margin-top: auto; padding-top: 20px; font-weight: bold; font-size: 1.2rem; }
 .stat-value.win-color { color: #00ff00; }
 .stat-value.loss-color { color: #ff6b6b; }
-
-/* --- Estilos do Gráfico e Paytable --- */
-.chart-box {
-    height: 250px;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.paytable-inline {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    font-size: 0.8rem;
-    color: #aaa;
-    margin-top: auto; /* Empurra para o fundo */
-}
-.paytable-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: #222;
-    padding: 5px 8px;
-    border-radius: 5px;
-}
+.chart-box { height: 250px; width: 100%; margin-bottom: 20px; }
+.paytable-inline { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; font-size: 0.8rem; color: #aaa; margin-top: auto; }
+.paytable-item { display: flex; align-items: center; gap: 5px; background: #222; padding: 5px 8px; border-radius: 5px; }
 .paytable-icon { color: gold; }
 
+/* --- Estilos Internos do Jogo --- */
+.patinhas-avatar { 
+    font-size: 80px; 
+    margin-bottom: 20px; 
+    transition: all 0.3s ease; 
+}
 
-/* --- Estilos Internos do Jogo (Mantidos) --- */
-.patinhas-avatar { font-size: 80px; margin-bottom: 20px; transition: all 0.3s ease; }
+/* Animações do Avatar (Mantidas) */
 .mood-happy { animation: bounce 0.6s infinite alternate; }
 .mood-shocked { animation: shake 0.5s; }
 @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px) scale(1.1); } }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
 
+/* GRID DO SLOT MACHINE - AJUSTE RESPONSIVO */
 .slots-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -117,64 +83,107 @@
     padding: 15px;
     border-radius: 15px;
     margin-bottom: 25px;
+    width: 100%; /* Ocupa a largura disponível do container */
+    box-sizing: border-box;
 }
+
 .grid-cell {
-    width: 80px; height: 80px;
+    /* MUDANÇA: Tamanho fluido com aspect-ratio para manter quadrado */
+    width: 100%;
+    aspect-ratio: 1 / 1; 
+    height: auto; /* Remove altura fixa */
     background: linear-gradient(145deg, #fff, #e6e6e6);
     border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 45px;
-    position: relative; overflow: hidden;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 40px; /* Reduzido levemente a base */
+    position: relative; 
+    overflow: hidden;
 }
+
+/* Ajustes para telas muito pequenas (Mobile S) */
+@media (max-width: 380px) {
+    .grid-cell {
+        font-size: 28px; /* Ícones menores em telas minúsculas */
+    }
+    .patinhas-avatar {
+        font-size: 60px;
+    }
+}
+
 .grid-cell.winner { border: 3px solid gold; background: #fffacd; }
 .grid-cell.spinning { color: transparent; box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); }
 .grid-cell.spinning::after {
     content: '🪙\A💵\A💰'; white-space: pre;
     position: absolute; animation: verticalSpin 0.1s linear infinite;
-    font-size: 40px; line-height: 80px; filter: blur(4px); opacity: 0.7;
+    font-size: 35px; line-height: 1.5; filter: blur(4px); opacity: 0.7;
 }
 @keyframes verticalSpin { 0% { transform: translateY(0); } 100% { transform: translateY(-66%); } }
 
+/* HUD e Controles */
 .hud { width: 100%; text-align: center; }
 .win-message { color: gold; font-weight: bold; margin-bottom: 15px; min-height: 24px; font-size: 1.1rem; }
 .balance-box { background: #000; padding: 10px; border-radius: 10px; border: 1px solid #333; margin-bottom: 15px; font-size: 1.2rem; }
-.controls { display: flex; gap: 10px; margin-bottom: 10px; }
-.bet-control { flex: 1; display: flex; flex-direction: column; text-align: left; font-size: 0.9rem; color: #ccc; }
+
+/* Controles Responsivos */
+.controls { 
+    display: flex; 
+    gap: 10px; 
+    margin-bottom: 10px; 
+    flex-wrap: wrap; /* Permite quebrar linha se necessário */
+}
+.bet-control { flex: 1; min-width: 100px; display: flex; flex-direction: column; text-align: left; font-size: 0.9rem; color: #ccc; }
 .bet-control select { padding: 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 5px; margin-top: 5px; }
-.spin-btn { flex: 2; background: gold; border: none; border-radius: 10px; font-weight: bold; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 0 #b8860b; }
+.spin-btn { flex: 2; min-width: 120px; background: gold; border: none; border-radius: 10px; font-weight: bold; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 0 #b8860b; }
 .spin-btn:active { transform: translateY(4px); box-shadow: none; }
 .spin-btn:disabled { filter: grayscale(1); cursor: not-allowed; }
 .sim-btn { width: 100%; padding: 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 5px; cursor: pointer; }
 
 
-/* --- Responsividade --- */
+/* --- MEDIA QUERIES (O Coração da Responsividade) --- */
+
+/* Tablets e Desktops Pequenos (até 1024px) */
 @media (max-width: 1024px) {
     .main-layout {
         flex-wrap: wrap;
     }
     .game-area {
-        order: 1; /* Jogo vem primeiro no topo em telas médias */
+        order: 1; 
         width: 100%;
-        flex: auto;
+        /* Mantém o jogo centralizado e com tamanho razoável */
+        max-width: 450px; 
     }
     .side-panel {
         order: 2;
-        width: 45%; /* Paineis lado a lado embaixo do jogo */
-        min-width: auto;
+        /* Divide o espaço restante para os painéis ficarem lado a lado abaixo do jogo */
+        width: calc(50% - 10px); 
+        min-width: 300px;
+        flex: auto;
     }
 }
 
+/* Celulares (até 768px) */
 @media (max-width: 768px) {
     .main-layout {
         flex-direction: column;
         align-items: center;
     }
     .side-panel {
-        width: 100%; /* Paineis empilhados em telas pequenas */
+        width: 100%;
+        max-width: 450px; /* Alinha a largura dos painéis com o jogo */
         order: 2;
     }
     .game-area {
         width: 100%;
         order: 1;
+    }
+    
+    /* Ajuste nos controles para telas apertadas */
+    .controls {
+        flex-direction: row;
+    }
+    .spin-btn {
+        padding: 15px 0; /* Botão mais fácil de tocar */
     }
 }

@@ -166,3 +166,55 @@
         font-size: 1.2rem;
     }
 }
+
+.promo-banner {
+    /* ... propriedades existentes ... */
+    padding: 15px; /* Reduzido levemente */
+    gap: 10px;
+}
+
+/* ... */
+
+/* MEDIA QUERY AJUSTADA */
+@media (max-width: 768px) {
+    .promo-banner {
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+        position: relative; /* Para posicionar os botões de forma absoluta se quiser, ou manter fluxo */
+    }
+
+    .promo-content {
+        flex-direction: column;
+        text-align: center;
+        min-height: auto;
+        width: 100%;
+    }
+
+    .promo-title {
+        font-size: 1.2rem;
+    }
+
+    .promo-description {
+        font-size: 0.9rem;
+    }
+
+    .promo-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    /* Botões de navegação maiores e reposicionados para mobile */
+    .promo-nav-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+        /* Opcional: Posicionar nas laterais absolutas para economizar altura */
+        /* position: absolute; top: 50%; transform: translateY(-50%); */
+    }
+    
+    /* Se usar position absolute acima: 
+    .promo-prev { left: 10px; }
+    .promo-next { right: 10px; } 
+    */
+}
