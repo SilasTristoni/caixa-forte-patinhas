@@ -78,9 +78,7 @@ const PatinhasSlots = () => {
     const spin = useCallback(() => {
         if (balance < betAmount || isAnySpinning) return;
 
-        // 1. Desconta a aposta do SALDO imediatamente ao girar
         setBalance(prev => prev - betAmount);
-        
         setWinMessage('GIRANDO...');
         setPatinhasMood('neutral');
         setWinningCells([]);
@@ -140,9 +138,6 @@ const PatinhasSlots = () => {
         });
 
         if (roundWin > 0) {
-            // CASO DE VITÓRIA
-            
-            // Atualiza Saldo: Soma o prêmio TOTAL (a aposta já foi paga no spin)
             setBalance(prev => {
                 const newBal = prev + roundWin;
                 setBalanceHistory(h => [...h, newBal]);
@@ -150,12 +145,11 @@ const PatinhasSlots = () => {
             });
             setWinningCells([...new Set(newWinningCells)]);
             
-            // Atualiza Estatísticas: Considera o lucro líquido (Prêmio - Custo da Aposta)
             setStats(prev => ({
                 ...prev,
                 totalWins: prev.totalWins + 1,
                 biggestWin: Math.max(prev.biggestWin, roundWin),
-                totalGainedLost: prev.totalGainedLost + (roundWin - betAmount), // CORREÇÃO APLICADA AQUI
+                totalGainedLost: prev.totalGainedLost + (roundWin - betAmount),
                 roundsPlayed: prev.roundsPlayed + 1
             }));
             
@@ -172,12 +166,8 @@ const PatinhasSlots = () => {
                  playSound('smallWin');
             }
         } else {
-            // CASO DE DERROTA
-            
-            // Apenas registra o histórico (saldo já foi descontado no spin)
             setBalanceHistory(h => [...h, balance]);
             
-            // Atualiza Estatísticas: Subtrai o valor da aposta perdida
             setStats(prev => ({
                 ...prev,
                 totalLosses: prev.totalLosses + 1,
@@ -202,8 +192,6 @@ const PatinhasSlots = () => {
         let simBal = balance;
         let simHist = [...balanceHistory];
         
-        // Nota: A simulação rápida atualiza apenas o saldo visual e histórico, 
-        // não impactando as estatísticas detalhadas (wins/losses/LP) para manter a performance.
         for(let i=0; i<100; i++) {
             if(simBal < betAmount) break;
             simBal -= betAmount;
@@ -218,6 +206,39 @@ const PatinhasSlots = () => {
         setBalance(simBal);
         setBalanceHistory(simHist);
         setWinMessage('Simulação rápida finalizada.');
+    };
+
+    // --- FUNÇÃO EXPORTAR CSV MELHORADA ---
+    const exportToCSV = () => {
+        // 1. Adiciona BOM (\uFEFF) para o Excel reconhecer acentuação
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+        
+        // Helper para formatar números: troca ponto por vírgula (padrão BR)
+        const fmt = (num) => num.toFixed(2).replace('.', ',');
+
+        // 2. Usa ponto e vírgula (;) como separador
+        csvContent += "RESUMO ESTATISTICO\n";
+        csvContent += `Rodadas Jogadas;${stats.roundsPlayed}\n`;
+        csvContent += `Vitorias;${stats.totalWins}\n`;
+        csvContent += `Derrotas;${stats.totalLosses}\n`;
+        csvContent += `Maior Premio;${fmt(stats.biggestWin)}\n`;
+        csvContent += `Lucro/Prejuizo Total;${fmt(stats.totalGainedLost)}\n`;
+        csvContent += `Saldo Final;${fmt(balance)}\n\n`;
+
+        // Histórico Detalhado
+        csvContent += "HISTORICO DE SALDO\n";
+        csvContent += "Rodada;Saldo (R$)\n";
+        balanceHistory.forEach((bal, index) => {
+            csvContent += `${index};${fmt(bal)}\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "patinhas_dados.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     const chartData = {
@@ -301,9 +322,21 @@ const PatinhasSlots = () => {
                                 {isAnySpinning ? '...' : 'GIRAR!'}
                             </button>
                         </div>
-                        <button className="sim-btn" onClick={runSimulation} disabled={isAnySpinning}>
-                            ⏩ Avançar 100 Rodadas
-                        </button>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                            <button className="sim-btn" onClick={runSimulation} disabled={isAnySpinning}>
+                                ⏩ Avançar 100 Rodadas
+                            </button>
+                            
+                            <button 
+                                className="sim-btn" 
+                                onClick={exportToCSV} 
+                                disabled={isAnySpinning}
+                                style={{ background: '#555', color: '#eee' }}
+                            >
+                                📥 Exportar Dados (CSV)
+                            </button>
+                        </div>
                     </div>
                 </div>
 
