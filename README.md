@@ -15,7 +15,7 @@ Bem-vindo ao **Caixa-Forte do Patinhas**, um simulador educativo de "Slot Machin
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SilasTristoni/caixa-forte-patinhas.git](https://github.com/SilasTristoni/caixa-forte-patinhas.git)
+    git clone https://github.com/SilasTristoni/caixa-forte-patinhas.git
     ```
 2.  **Entre na pasta:**
     ```bash
@@ -29,18 +29,11 @@ Bem-vindo ao **Caixa-Forte do Patinhas**, um simulador educativo de "Slot Machin
     ```bash
     npm start
     ```
-    O jogo abrirá automaticamente em [http://localhost:3000](http://localhost:3000).
+    O jogo abrirá automaticamente em [http://localhost:3000
 
-## 🌐 Como Fazer Deploy (GitHub Pages)
+## 🌐 Não quero baixar localmente, como posso testar??
 
-Este projeto já está configurado para deploy automático.
-
-1.  Certifique-se de ter as alterações comitadas no git.
-2.  Execute o comando de deploy:
-    ```bash
-    npm run deploy
-    ```
-3.  O projeto estará disponível em: https://SilasTristoni.github.io/caixa-forte-patinhas
+O projeto estará disponível em: https://SilasTristoni.github.io/caixa-forte-patinhas
 
 ## 🛠️ Tecnologias Utilizadas
 
