@@ -51,11 +51,9 @@ const PatinhasSlots = () => {
         totalGainedLost: 0,
         roundsPlayed: 0
     });
-    
-    // REMOVIDO: Estados e lógica de bannerAnimation
 
     useEffect(() => {
-        // Pré-carrega os sons
+        // Pré-carrega os sons se necessário
     }, []);
 
     const isAnySpinning = spinningCols.some(Boolean);
@@ -80,7 +78,9 @@ const PatinhasSlots = () => {
     const spin = useCallback(() => {
         if (balance < betAmount || isAnySpinning) return;
 
+        // 1. Desconta a aposta do SALDO imediatamente ao girar
         setBalance(prev => prev - betAmount);
+        
         setWinMessage('GIRANDO...');
         setPatinhasMood('neutral');
         setWinningCells([]);
@@ -140,6 +140,9 @@ const PatinhasSlots = () => {
         });
 
         if (roundWin > 0) {
+            // CASO DE VITÓRIA
+            
+            // Atualiza Saldo: Soma o prêmio TOTAL (a aposta já foi paga no spin)
             setBalance(prev => {
                 const newBal = prev + roundWin;
                 setBalanceHistory(h => [...h, newBal]);
@@ -147,16 +150,15 @@ const PatinhasSlots = () => {
             });
             setWinningCells([...new Set(newWinningCells)]);
             
+            // Atualiza Estatísticas: Considera o lucro líquido (Prêmio - Custo da Aposta)
             setStats(prev => ({
                 ...prev,
                 totalWins: prev.totalWins + 1,
                 biggestWin: Math.max(prev.biggestWin, roundWin),
-                totalGainedLost: prev.totalGainedLost + roundWin,
+                totalGainedLost: prev.totalGainedLost + (roundWin - betAmount), // CORREÇÃO APLICADA AQUI
                 roundsPlayed: prev.roundsPlayed + 1
             }));
             
-            // REMOVIDO: setBannerAnimation('win');
-
             if (roundWin < betAmount) {
                 setWinMessage(`Bateu na trave! Recuperou R$ ${roundWin.toFixed(2)}`);
                 setPatinhasMood('neutral'); 
@@ -170,16 +172,18 @@ const PatinhasSlots = () => {
                  playSound('smallWin');
             }
         } else {
+            // CASO DE DERROTA
+            
+            // Apenas registra o histórico (saldo já foi descontado no spin)
             setBalanceHistory(h => [...h, balance]);
             
+            // Atualiza Estatísticas: Subtrai o valor da aposta perdida
             setStats(prev => ({
                 ...prev,
                 totalLosses: prev.totalLosses + 1,
                 totalGainedLost: prev.totalGainedLost - betAmount,
                 roundsPlayed: prev.roundsPlayed + 1
             }));
-            
-            // REMOVIDO: setBannerAnimation('loss');
             
             if (nearMiss) {
                 setWinMessage('UUH! Foi quase!');
@@ -197,6 +201,9 @@ const PatinhasSlots = () => {
         if (isAnySpinning) return;
         let simBal = balance;
         let simHist = [...balanceHistory];
+        
+        // Nota: A simulação rápida atualiza apenas o saldo visual e histórico, 
+        // não impactando as estatísticas detalhadas (wins/losses/LP) para manter a performance.
         for(let i=0; i<100; i++) {
             if(simBal < betAmount) break;
             simBal -= betAmount;
@@ -228,10 +235,8 @@ const PatinhasSlots = () => {
 
     return (
         <div className="patinhas-container">
-            {/* Novo layout de 3 colunas */}
             <div className="main-layout">
                 
-                {/* COLUNA ESQUERDA: ESTATÍSTICAS */}
                 <div className="side-panel left-panel">
                     <h3>Estatísticas</h3>
                     <div className="stat-item">
@@ -258,7 +263,6 @@ const PatinhasSlots = () => {
                     </div>
                 </div>
 
-                {/* COLUNA CENTRAL: ÁREA DO JOGO */}
                 <div className="game-area">
                     <div className={`patinhas-avatar mood-${patinhasMood}`}>
                         {patinhasMood === 'neutral' && '🦆'}
@@ -303,7 +307,6 @@ const PatinhasSlots = () => {
                     </div>
                 </div>
 
-                {/* COLUNA DIREITA: GRÁFICO */}
                 <div className="side-panel right-panel">
                     <h3>Sua Jornada Financeira</h3>
                     <div className="chart-box">
