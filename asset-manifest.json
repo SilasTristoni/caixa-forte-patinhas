@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/caixa-forte-patinhas/static/css/main.5acadf83.css",
-    "main.js": "/caixa-forte-patinhas/static/js/main.3db04f64.js",
+    "main.js": "/caixa-forte-patinhas/static/js/main.d3f98c04.js",
     "static/js/453.a17a4610.chunk.js": "/caixa-forte-patinhas/static/js/453.a17a4610.chunk.js",
     "index.html": "/caixa-forte-patinhas/index.html",
     "main.5acadf83.css.map": "/caixa-forte-patinhas/static/css/main.5acadf83.css.map",
-    "main.3db04f64.js.map": "/caixa-forte-patinhas/static/js/main.3db04f64.js.map",
+    "main.d3f98c04.js.map": "/caixa-forte-patinhas/static/js/main.d3f98c04.js.map",
     "453.a17a4610.chunk.js.map": "/caixa-forte-patinhas/static/js/453.a17a4610.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5acadf83.css",
-    "static/js/main.3db04f64.js"
+    "static/js/main.d3f98c04.js"
   ]
 }
